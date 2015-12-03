@@ -1,0 +1,67 @@
+<!-- -*- mode: XML -*- -->
+
+<launch>
+
+  <!-- Set this to your camera's name -->
+  <arg name="rig_name" default="stereo"/>
+  <arg name="left_cam_name" default="left"/>
+  <arg name="right_cam_name" default="right"/>
+  <arg name="left_cam_device" default="/dev/video1"/>
+  <arg name="right_cam_device" default="/dev/video0"/>
+
+  
+  <group ns="stereo">
+
+    <group ns="left">
+      
+      <!-- camera manager -->
+      <node pkg="nodelet"
+	    type="nodelet"
+	    name="camera_nodelet_manager"
+	    args="manager"/>
+      
+      <node pkg="gscam" type="gscam" name="$(arg left_cam_name)">
+	<env name="GSCAM_CONFIG" value="v4l2src device=$(arg left_cam_device) ! video/x-raw-rgb ! ffmpegcolorspace"/>
+	<param name="camera_name" value="$(arg left_cam_name)" />
+	<param name="frame_id" value="stereo/left" />
+	<remap from="camera/image_raw" to="image_raw" />
+	<remap from="camera/camera_info" to="camera_info" />
+
+      </node>
+      
+      <!-- Provide rectification -->
+      <node pkg="image_proc" 
+            type="image_proc" 
+            name="$(arg left_cam_name)_rect">
+      </node>
+
+    </group>
+    
+    <group ns="right">
+      
+      <!-- camera manager -->
+      <node pkg="nodelet"
+	    type="nodelet"
+	    name="camera_nodelet_manager"
+	    args="manager"/>
+      
+      <node pkg="gscam" type="gscam" name="$(arg right_cam_name)">
+	<env name="GSCAM_CONFIG" value="v4l2src device=$(arg right_cam_device) ! video/x-raw-rgb ! ffmpegcolorspace"/>
+	<param name="frame_id" value="stereo/right" />
+	<param name="camera_name" value="$(arg right_cam_name)" />
+	<remap from="camera/image_raw" to="image_raw" />
+	<remap from="camera/camera_info" to="camera_info" />
+      </node>
+      
+      <!-- Provide rectification -->
+      <node pkg="image_proc" 
+            type="image_proc" 
+            name="$(arg right_cam_name)_rect">
+      </node>
+
+    </group>
+    
+  </group>
+
+</launch>
+

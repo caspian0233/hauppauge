@@ -1,0 +1,32 @@
+<!-- -*- mode: XML -*- -->
+<!-- Example launch file for a pair of stereo cameras. -->
+
+<launch>
+
+  <!-- Set this to your camera's name -->
+  <arg name="camera_name" default="camera"/>
+  <arg name="device_name" default="/dev/video0"/> 
+
+  <!-- camera manager -->
+  <node pkg="nodelet"
+	type="nodelet"
+	name="camera_nodelet_manager"
+	args="manager"/>
+  
+  <node pkg="gscam" type="gscam" name="$(arg camera_name)" ns="$(arg camera_name)">
+    <env name="GSCAM_CONFIG" value="v4l2src device=$(arg device_name) ! video/x-raw-rgb ! ffmpegcolorspace"/>
+    <param name="camera_name" value="$(arg camera_name)"/>
+    <param name="frame_id" value="$(arg camera_name)" />
+    <remap from="camera/image_raw" to="image_raw" />
+  </node>
+  
+  <!-- Provide rectification -->
+  <node pkg="image_proc" 
+        type="image_proc" 
+        name="$(arg camera_name)_rect"
+	ns="$(arg camera_name)">
+  </node>
+
+
+</launch>
+
