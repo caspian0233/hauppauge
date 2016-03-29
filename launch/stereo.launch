@@ -1,4 +1,5 @@
 <!-- -*- mode: XML -*- -->
+<!-- Example launch file for a pair of stereo cameras. -->
 
 <launch>
 
@@ -18,7 +19,8 @@
       <node pkg="nodelet"
 	    type="nodelet"
 	    name="camera_nodelet_manager"
-	    args="manager"/>
+	    args="manager">
+      </node>
       
       <node pkg="gscam" type="gscam" name="$(arg left_cam_name)">
 	<env name="GSCAM_CONFIG" value="v4l2src device=$(arg left_cam_device) ! video/x-raw-rgb ! ffmpegcolorspace"/>
@@ -43,7 +45,8 @@
       <node pkg="nodelet"
 	    type="nodelet"
 	    name="camera_nodelet_manager"
-	    args="manager"/>
+	    args="manager">
+      </node>
       
       <node pkg="gscam" type="gscam" name="$(arg right_cam_name)">
 	<env name="GSCAM_CONFIG" value="v4l2src device=$(arg right_cam_device) ! video/x-raw-rgb ! ffmpegcolorspace"/>
