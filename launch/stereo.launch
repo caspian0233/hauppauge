@@ -7,8 +7,8 @@
   <arg name="rig_name" default="stereo"/>
   <arg name="left_cam_name" default="left"/>
   <arg name="right_cam_name" default="right"/>
-  <arg name="left_cam_device" default="/dev/video1"/>
-  <arg name="right_cam_device" default="/dev/video0"/>
+  <arg name="left_cam_device" default="/dev/video0"/>
+  <arg name="right_cam_device" default="/dev/video1"/>
 
   
   <group ns="stereo">
